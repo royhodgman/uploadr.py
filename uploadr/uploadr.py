@@ -51,10 +51,6 @@ import xmltramp
 ##
 
 #
-# Location to scan for new images
-#
-IMAGE_DIR = "images/"
-#
 #   Flickr settings
 #
 FLICKR = {"title": "",
@@ -72,10 +68,6 @@ SLEEP_TIME = 1 * 60
 #     How often to wait between uploading individual images (in seconds)
 #
 DRIP_TIME = 1 * 60
-#
-#   File we keep the history of uploaded images in.
-#
-HISTORY_FILE = os.path.join(IMAGE_DIR, "uploadr.history")
 
 ##
 ##  You shouldn't need to modify anything below here
@@ -113,14 +105,24 @@ class Uploadr:
 
     token = None
     perms = ""
-    TOKEN_FILE = os.path.join(IMAGE_DIR, ".flickrToken")
 
-    def __init__( self ):
+    def __init__( self, args ):
         """ Constructor
         """
+        #
+        # Location to scan for new images
+        #
+        self.IMAGE_DIR = args.image_dir
+
+        #
+        #   File we keep the history of uploaded images in.
+        #
+        self.HISTORY_FILE = os.path.join(self.IMAGE_DIR, "uploadr.history")
+
+
+        self.TOKEN_FILE = os.path.join(self.IMAGE_DIR, ".flickrToken")
+
         self.token = self.getCachedToken()
-
-
 
     def signCall( self, data):
         """
@@ -308,7 +310,7 @@ class Uploadr:
         newImages = self.grabNewImages()
         if ( not self.checkToken() ):
             self.authenticate()
-        self.uploaded = shelve.open( HISTORY_FILE )
+        self.uploaded = shelve.open( self.HISTORY_FILE )
         for i, image in enumerate( newImages ):
             success = self.uploadImage( image )
             if args.drip_feed and success and i != len( newImages )-1:
@@ -321,7 +323,7 @@ class Uploadr:
         """
 
         images = []
-        foo = os.walk( IMAGE_DIR )
+        foo = os.walk( self.IMAGE_DIR )
         for data in foo:
             (dirpath, dirnames, filenames) = data
             for f in filenames :
@@ -481,9 +483,11 @@ if __name__ == "__main__":
         help='Space-separated tags for uploaded images')
     parser.add_argument('-r', '--drip-feed',   action='store_true',
         help='Wait a bit between uploading individual images')
+    parser.add_argument('--image-dir',   action='store',
+        help='The directory to scan for images')
     args = parser.parse_args()
 
-    flick = Uploadr()
+    flick = Uploadr( args )
 
     if args.daemon:
         flick.run()
