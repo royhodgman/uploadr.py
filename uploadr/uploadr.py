@@ -55,7 +55,7 @@ import xmltramp
 #
 FLICKR = {"title": "",
         "description": "",
-        "tags": "auto-upload",
+        "tags": [ "auto-upload" ],
         "is_public": "0",
         "is_friend": "0",
         "is_family": "0",
@@ -349,13 +349,20 @@ class Uploadr:
                 if args.description: # Replace
                     FLICKR["description"] = args.description
                 if args.tags: # Append
-                    FLICKR["tags"] += " " + args.tags + " "
+                    FLICKR["tags"] += args.tags
+                    
+                # clean up tags
+                for i in range( len( FLICKR["tags"] ) ):
+                    # if a tag has a space, put quotes around it
+                    if " " in FLICKR["tags"][ i ]:
+                        FLICKR["tags"][i] = '"{0}"'.format( FLICKR["tags"][i] )
+
                 d = {
                     api.token       : str(self.token),
                     api.perms       : str(self.perms),
                     "title"         : str( FLICKR["title"] ),
                     "description"   : str( FLICKR["description"] ),
-                    "tags"          : str( FLICKR["tags"] ),
+                    "tags"          : str( " ".join( FLICKR["tags"] ) ),
                     "is_public"     : str( FLICKR["is_public"] ),
                     "is_friend"     : str( FLICKR["is_friend"] ),
                     "is_family"     : str( FLICKR["is_family"] ),
@@ -481,7 +488,7 @@ if __name__ == "__main__":
         help='Title for uploaded images')
     parser.add_argument('-e', '--description', action='store',
         help='Description for uploaded images')
-    parser.add_argument('-t', '--tags',        action='store',
+    parser.add_argument('-t', '--tags',        action='store', nargs="+",
         help='Space-separated tags for uploaded images')
     parser.add_argument('-r', '--drip-feed',   action='store_true',
         help='Wait a bit between uploading individual images')
