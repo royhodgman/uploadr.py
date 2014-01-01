@@ -54,12 +54,12 @@ import xmltramp
 #   Flickr settings
 #
 FLICKR = {"title": "",
-        "description": "",
-        "tags": [ "auto-upload" ],
-        "is_public": "0",
-        "is_friend": "0",
-        "is_family": "0",
-        "hidden": "2" }
+          "description": "",
+          "tags": [ "auto-upload" ],
+          "is_public": "0",
+          "is_friend": "0",
+          "is_family": "0",
+          "hidden": "2" }
 #
 #   How often to check for new images to upload (in seconds)
 #
@@ -482,18 +482,32 @@ class Uploadr:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Upload images to Flickr.')
-    parser.add_argument('-d', '--daemon', action='store_true',
-        help='Run forever as a daemon')
-    parser.add_argument('-i', '--title',       action='store',
-        help='Title for uploaded images')
-    parser.add_argument('-e', '--description', action='store',
-        help='Description for uploaded images')
-    parser.add_argument('-t', '--tags',        action='store', nargs="+",
-        help='Space-separated tags for uploaded images')
-    parser.add_argument('-r', '--drip-feed',   action='store_true',
-        help='Wait a bit between uploading individual images')
-    parser.add_argument('--image-dir',   action='store',
-        help='The directory to scan for images')
+
+    parser.add_argument('-d', '--daemon',
+                        action='store_true',
+                        help='Run forever as a daemon')
+
+    parser.add_argument('-i', '--title',
+                        action='store',
+                        help='Title for uploaded images')
+
+    parser.add_argument('-e', '--description', 
+                        action='store',
+                        help='Description for uploaded images')
+
+    parser.add_argument('-t', '--tags',        
+                        action='store', 
+                        nargs="+",
+                        help='Space-separated tags for uploaded images')
+
+    parser.add_argument('-r', '--drip-feed',   
+                        action='store_true',
+                        help='Wait a bit between uploading individual images')
+
+    parser.add_argument('--image-dir',   
+                        action='store',
+                        help='The directory to scan for images')
+
     args = parser.parse_args()
 
     flick = Uploadr( args )
