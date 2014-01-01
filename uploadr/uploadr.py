@@ -80,17 +80,17 @@ class APIConstants:
     """ APIConstants class
     """
 
-    base = "http://api.flickr.com/services/"
+    base   = "http://api.flickr.com/services/"
     rest   = base + "rest/"
     auth   = base + "auth/"
     upload = base + "upload/"
 
-    token = "auth_token"
+    token  = "auth_token"
     secret = "secret"
-    key = "api_key"
-    sig = "api_sig"
-    frob = "frob"
-    perms = "perms"
+    key    = "api_key"
+    sig    = "api_sig"
+    frob   = "frob"
+    perms  = "perms"
     method = "method"
 
     def __init__( self ):
@@ -103,9 +103,6 @@ api = APIConstants()
 class Uploadr:
     """ Uploadr class
     """
-
-    token = None
-    perms = ""
 
     def __init__( self, args ):
         """ Constructor
@@ -120,10 +117,11 @@ class Uploadr:
         #
         self.HISTORY_FILE = os.path.join(self.IMAGE_DIR, "uploadr.history")
 
-
         self.TOKEN_FILE = os.path.join(self.IMAGE_DIR, ".flickrToken")
 
         self.token = self.getCachedToken()
+
+        self.perms = ""
 
     def signCall( self, data):
         """
@@ -254,8 +252,6 @@ class Uploadr:
             return open( self.TOKEN_FILE ).read()
         else :
             return None
-
-
 
     def cacheToken( self ):
         """ cacheToken
